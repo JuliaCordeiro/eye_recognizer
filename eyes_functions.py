@@ -1,3 +1,4 @@
+import numpy as np
 from math import hypot
 
 
@@ -7,7 +8,7 @@ def midpoint(frist_point, second_point):
     return x_point, y_point
 
 
-def eye_points(mask, points):
+def eye_center_points(mask, points):
     left_center = (mask.part(points[0]).x, mask.part(points[0]).y)
     right_center = (mask.part(points[3]).x, mask.part(points[3]).y)
     top_center = midpoint(mask.part(points[1]), mask.part(points[2]))
@@ -21,3 +22,22 @@ def blinking_ratio(eye_points):
 
     ratio = horizontal_lenght / vertical_lenght
     return ratio
+
+
+def eye_region(mask, points):
+    region = np.array([
+        (mask.part(points[0]).x, mask.part(points[0]).y),
+        (mask.part(points[1]).x, mask.part(points[1]).y),
+        (mask.part(points[2]).x, mask.part(points[2]).y),
+        (mask.part(points[3]).x, mask.part(points[3]).y),
+        (mask.part(points[4]).x, mask.part(points[4]).y),
+        (mask.part(points[5]).x, mask.part(points[5]).y)], np.int32)
+    return region
+
+
+def eye_extremes_region(region):
+    min_x = np.min(region[:, 0])
+    max_x = np.max(region[:, 0])
+    min_y = np.min(region[:, 1])
+    max_y = np.max(region[:, 1])
+    return [min_x, max_x, min_y, max_y]
