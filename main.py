@@ -1,12 +1,13 @@
 import cv2
 import dlib
 from eyes_functions import (
-    midpoint,
     eye_points,
+    blinking_ratio,
 )
 from constants import (
     LEFT_EYE_POINTS,
     RIGHT_EYE_POINTS,
+    BLINK_RATIO,
 )
 
 
@@ -32,6 +33,13 @@ def detecting():
             # Right eye, horizontal and vertical lines
             cv2.line(frame, right_eye_points[0], right_eye_points[1], (0, 255, 255), 2)
             cv2.line(frame, right_eye_points[2], right_eye_points[3], (0, 255, 255), 2)
+
+            left_eye_ratio = blinking_ratio(left_eye_points)
+            right_eye_ratio = blinking_ratio(right_eye_points)
+            eyes_blinking_ratio = (left_eye_ratio + right_eye_ratio) / 2
+
+            if eyes_blinking_ratio > BLINK_RATIO:
+                cv2.putText(frame, "Blink hard", (50, 150), cv2.FONT_HERSHEY_SIMPLEX, 3, (255), 2 )
 
         cv2.imshow('Camera', frame)
 
